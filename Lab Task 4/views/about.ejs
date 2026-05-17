@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us – Sweet Layers Bakery</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+ <nav class="navbar">
+  <div class="logo">Sweet Layers</div>
+  <button class="hamburger" id="hamburger">&#9776;</button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/" >Home</a></li>
+    <li><a href="/menu">Menu</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/about"class="active">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <% if (userId) { %>
+      <% if (userRole === "admin") { %>
+        <li><a href="/admin">Admin Panel</a></li>
+      <% } %>
+      <li><a href="/profile"><%= userName %></a></li>
+      <li><a href="/logout">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    <% } %>
+  </ul>
+</nav>
+
+<!-- FLASH MESSAGES -->
+<% if (messages.error && messages.error.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.error.forEach(msg => { %>
+      <div class="alert alert-error"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+<% if (messages.success && messages.success.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.success.forEach(msg => { %>
+      <div class="alert alert-success"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <h1>About Us</h1>
+    <p>A little story about the people behind every bake.</p>
+  </section>
+
+  <!-- OUR STORY -->
+  <section class="about-story">
+    <div class="about-story-inner">
+      <div class="about-text">
+        <h2>Our Story</h2>
+        <p>Sweet Layers started in a small kitchen in Lahore in 2015. What began as a weekend hobby — baking cakes for family and friends — quickly turned into something much bigger when word spread around the neighbourhood.</p>
+        <p>We use fresh, natural ingredients and family recipes passed down through generations. No preservatives, no shortcuts, no artificial colours — just honest, good baking made with care and patience.</p>
+        <p>Today we bake hundreds of orders every month, but every cake still gets the same personal attention it did on day one.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat">
+          <h3>10+</h3>
+          <p>Years of Baking</p>
+        </div>
+        <div class="stat">
+          <h3>5,000+</h3>
+          <p>Happy Customers</p>
+        </div>
+        <div class="stat">
+          <h3>100%</h3>
+          <p>Natural Ingredients</p>
+        </div>
+        <div class="stat">
+          <h3>0</h3>
+          <p>Preservatives Used</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR VALUES -->
+  <section class="values">
+    <h2>What We Believe In</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="feature-icon">🌿</div>
+        <h3>Fresh Ingredients Only</h3>
+        <p>We source local, seasonal ingredients. If it's not fresh, it doesn't go into our cakes.</p>
+      </div>
+      <div class="value-card">
+        <div class="feature-icon">👩‍🍳</div>
+        <h3>Baked to Order</h3>
+        <p>Nothing sits on a shelf. Every order is baked fresh the day it's picked up or delivered.</p>
+      </div>
+      <div class="value-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Attention to Detail</h3>
+        <p>From the sponge to the final decoration, every layer gets the care it deserves.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <h2>Want to Try Our Bakes?</h2>
+    <p>Browse our menu or get in touch to place a custom order.</p>
+    <a href="/menu" class="btn btn-light">See Our Menu</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 Sweet Layers Bakery. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>
