@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Product - Sweet Layers Admin</title>
+  <link rel="stylesheet" href="/admin-style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h1>Edit Product</h1>
+
+    <form method="POST" action="/admin/edit-product/<%= product._id %>" enctype="multipart/form-data">
+      
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input type="text" name="name" value="<%= product.name %>" required>
+        <div class="error-message" id="name-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Price (Rs) *</label>
+        <input type="number" name="price" value="<%= product.price %>" required min="0">
+        <div class="error-message" id="price-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category" required>
+          <option value="Cakes" <%= product.category === 'Cakes' ? 'selected' : '' %>>Cakes</option>
+          <option value="Cupcakes" <%= product.category === 'Cupcakes' ? 'selected' : '' %>>Cupcakes</option>
+          <option value="Brownies" <%= product.category === 'Brownies' ? 'selected' : '' %>>Brownies</option>
+          <option value="Cookies" <%= product.category === 'Cookies' ? 'selected' : '' %>>Cookies</option>
+          <option value="Cheesecakes" <%= product.category === 'Cheesecakes' ? 'selected' : '' %>>Cheesecakes</option>
+          <option value="Seasonal" <%= product.category === 'Seasonal' ? 'selected' : '' %>>Seasonal</option>
+        </select>
+        <div class="error-message" id="category-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Rating (1-5) *</label>
+        <input type="number" name="rating" value="<%= product.rating %>" required min="1" max="5" step="0.1">
+        <div class="error-message" id="rating-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" name="stock" value="<%= product.stock %>" required min="0">
+        <div class="error-message" id="stock-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea name="description" required><%= product.description %></textarea>
+        <div class="error-message" id="description-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Product Image</label>
+        <% if (product.image) { %>
+          <div class="current-image">
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px;">Current Image:</p>
+            <img src="<%= product.image %>" alt="<%= product.name %>">
+          </div>
+        <% } %>
+        <input type="file" name="image" accept="image/*">
+        <p style="color: #888; font-size: 0.85rem; margin-top: 5px;">Leave empty to keep current image</p>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn-submit">Update Product</button>
+        <a href="/admin" style="flex: 1; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+          <button type="button" class="btn-cancel" style="width: 100%;">Cancel</button>
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // Simple client-side validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+      let isValid = true;
+      
+      const fields = ['name', 'price', 'category', 'rating', 'stock', 'description'];
+      
+      fields.forEach(field => {
+        const element = document.querySelector(`[name="${field}"]`);
+        const errorDiv = document.getElementById(`${field}-error`);
+        
+        if (!element.value.trim()) {
+          errorDiv.textContent = 'This field is required';
+          isValid = false;
+        } else {
+          errorDiv.textContent = '';
+        }
+      });
+
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
