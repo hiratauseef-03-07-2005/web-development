@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Product - Sweet Layers Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/admin-style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+  <div class="logo">Sweet Layers</div>
+  <button class="hamburger" id="hamburger">&#9776;</button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/" class="active">Home</a></li>
+    <li><a href="/menu">Menu</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <% if (userId) { %>
+      <% if (userRole === "admin") { %>
+        <li><a href="/admin">Admin Panel</a></li>
+      <% } %>
+      <li><a href="/profile"><%= userName %></a></li>
+      <li><a href="/logout">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    <% } %>
+  </ul>
+</nav>
+
+<!-- FLASH MESSAGES -->
+<% if (messages.error && messages.error.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.error.forEach(msg => { %>
+      <div class="alert alert-error"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+<% if (messages.success && messages.success.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.success.forEach(msg => { %>
+      <div class="alert alert-success"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+
+
+  <div class="form-container">
+    <h1>Add New Product</h1>
+
+    <form method="POST" action="/admin/add-product" enctype="multipart/form-data">
+      
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input type="text" name="name" required>
+        <div class="error-message" id="name-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Price (Rs) *</label>
+        <input type="number" name="price" required min="0">
+        <div class="error-message" id="price-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category" required>
+          <option value="">-- Select Category --</option>
+          <option value="Cakes">Cakes</option>
+          <option value="Cupcakes">Cupcakes</option>
+          <option value="Brownies">Brownies</option>
+          <option value="Cookies">Cookies</option>
+          <option value="Cheesecakes">Cheesecakes</option>
+          <option value="Seasonal">Seasonal</option>
+        </select>
+        <div class="error-message" id="category-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Rating (1-5) *</label>
+        <input type="number" name="rating" required min="1" max="5" step="0.1">
+        <div class="error-message" id="rating-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" name="stock" required min="0">
+        <div class="error-message" id="stock-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea name="description" required></textarea>
+        <div class="error-message" id="description-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Product Image *</label>
+        <input type="file" name="image" accept="image/*" required>
+        <div class="error-message" id="image-error"></div>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn-submit">Add Product</button>
+        <a href="/admin" style="flex: 1; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+          <button type="button" class="btn-cancel" style="width: 100%;">Cancel</button>
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // Simple client-side validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+      let isValid = true;
+      
+      const fields = ['name', 'price', 'category', 'rating', 'stock', 'description', 'image'];
+      
+      fields.forEach(field => {
+        const element = document.querySelector(`[name="${field}"]`);
+        const errorDiv = document.getElementById(`${field}-error`);
+        
+        if (!element.value.trim()) {
+          errorDiv.textContent = 'This field is required';
+          isValid = false;
+        } else {
+          errorDiv.textContent = '';
+        }
+      });
+
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+  </script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

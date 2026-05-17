@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register – Sweet Layers Bakery</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">Sweet Layers</div>
+    <button class="hamburger" id="hamburger">&#9776;</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/menu">Menu</a></li>
+      <li><a href="/products">Products</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <% if (userId) { %>
+        <% if (userRole === "admin") { %>
+          <li><a href="/admin">Admin Panel</a></li>
+        <% } %>
+        <li><a href="/profile"><%= userName %></a></li>
+        <li><a href="/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register" class="active">Register</a></li>
+      <% } %>
+    </ul>
+  </nav>
+
+ 
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <h1>Create Account</h1>
+    <p>Join Sweet Layers and start enjoying our bakes</p>
+  </section>
+
+  <!-- FLASH MESSAGES -->
+  <% if (messages.error && messages.error.length > 0) { %>
+    <div style="max-width: 400px; margin: 20px auto;">
+      <% messages.error.forEach(msg => { %>
+        <div class="alert alert-error"><%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+  <% if (messages.success && messages.success.length > 0) { %>
+    <div style="max-width: 400px; margin: 20px auto;">
+      <% messages.success.forEach(msg => { %>
+        <div class="alert alert-success"><%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- REGISTER FORM -->
+  <section class="contact" style="padding: 50px 20px;">
+    <div class="contact-wrapper" style="justify-content: center;">
+      <form method="POST" action="/register" class="contact-form" style="width: 340px;">
+        
+        <div class="contact-form" style="display: flex; flex-direction: column; gap: 14px;">
+          
+          <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #5c3317;">Full Name *</label>
+            <input type="text" name="name" required placeholder="Enter your name" />
+          </div>
+
+          <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #5c3317;">Email *</label>
+            <input type="email" name="email" required placeholder="Enter your email" />
+          </div>
+
+          <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #5c3317;">Password *</label>
+            <input type="password" name="password" required placeholder="At least 6 characters" />
+          </div>
+
+          <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #5c3317;">Confirm Password *</label>
+            <input type="password" name="confirmPassword" required placeholder="Re-enter your password" />
+          </div>
+
+          <button type="submit" style="background-color: #c0586a; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 1rem; cursor: pointer; font-family: Georgia, serif; font-weight: bold;">
+            Register
+          </button>
+
+        </div>
+
+      </form>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <p>Already have an account? <a href="/login" style="color: #c0586a; font-weight: bold;">Login here</a></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 Sweet Layers Bakery. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>
