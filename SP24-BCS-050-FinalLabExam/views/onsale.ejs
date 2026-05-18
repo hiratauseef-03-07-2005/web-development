@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>On Sale – Sweet Layers Bakery</title>
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* ── SALE BADGE on product card ─────────────────────── */
+    .sale-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background-color: #c0586a;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── PRICE display: old crossed out + new sale price ── */
+    .price-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .original-price {
+      font-size: 0.9rem;
+      color: #aaa;
+      text-decoration: line-through;
+    }
+    .sale-price {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #c0586a;
+    }
+
+    /* ── PAGINATION CONTROLS ────────────────────────────── */
+    .jquery-pagination {
+      background-color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+      border-top: 1px solid #f0d5e0;
+    }
+    .jquery-pagination .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    /* Prev / Next buttons */
+    #btn-prev,
+    #btn-next {
+      background-color: #c0586a;
+      color: #fff;
+      border: none;
+      padding: 10px 26px;
+      border-radius: 6px;
+      font-family: Georgia, serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    #btn-prev:hover,
+    #btn-next:hover {
+      background-color: #5c3317;
+    }
+
+    /* Disabled state — button stays in the DOM but looks inactive */
+    #btn-prev:disabled,
+    #btn-next:disabled {
+      background-color: #ddd;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+
+    /* Page indicator text  e.g. "Page 2 of 3" */
+    #page-indicator {
+      font-size: 0.95rem;
+      color: #5c3317;
+      font-weight: bold;
+      min-width: 100px;
+    }
+
+    .pagination-info {
+      font-size: 0.88rem;
+      color: #888;
+    }
+
+    /* ── EMPTY STATE ────────────────────────────────────── */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+    }
+    .no-results p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ──────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="logo">Sweet Layers</div>
+    <button class="hamburger" id="hamburger">&#9776;</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/menu">Menu</a></li>
+      <li><a href="/products">Products</a></li>
+      <li><a href="/onsale-products" class="active">On Sale</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <% if (userId) { %>
+        <% if (userRole === "admin") { %>
+          <li><a href="/admin">Admin Panel</a></li>
+        <% } %>
+        <li><a href="/profile"><%= userName %></a></li>
+        <li><a href="/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      <% } %>
+    </ul>
+  </nav>
+
+  <!-- ── FLASH MESSAGES ──────────────────────────────────── -->
+  <% if (messages.error && messages.error.length > 0) { %>
+    <div style="max-width: 600px; margin: 20px auto;">
+      <% messages.error.forEach(function(msg) { %>
+        <div class="alert alert-error"><%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+  <% if (messages.success && messages.success.length > 0) { %>
+    <div style="max-width: 600px; margin: 20px auto;">
+      <% messages.success.forEach(function(msg) { %>
+        <div class="alert alert-success"><%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- ── PAGE HEADER ─────────────────────────────────────── -->
+  <section class="page-header">
+    <h1>🏷️ On Sale Now</h1>
+    <p>Limited-time deals on your favourite bakes — grab them before they're gone!</p>
+    <p class="products-count"><%= products.length %> deal<%= products.length !== 1 ? 's' : '' %> available</p>
+  </section>
+
+  <!-- ── PRODUCTS SECTION ────────────────────────────────── -->
+  <section class="products-section">
+
+    <% if (products.length === 0) { %>
+      <!-- No sale products in DB -->
+      <div class="no-results">
+        <p>No products are on sale right now. Check back soon!</p>
+        <a href="/products" class="btn">Browse All Products</a>
+      </div>
+
+    <% } else { %>
+
+      <!--
+        KEY POINT (exam requirement):
+        ALL on-sale products are rendered here by EJS into the DOM.
+        The <div id="product-list"> container holds every .product-card.
+        jQuery will then HIDE all cards and show only 10 at a time.
+      -->
+      <div id="product-list" class="products-grid">
+
+        <% products.forEach(function(product) { %>
+          <!--
+            Every card uses the shared class "product-card".
+            jQuery targets this class with $('.product-card') to
+            select, slice, hide, and show them.
+          -->
+          <div class="product-card">
+
+            <div class="product-img-wrap">
+              <img src="<%= product.image %>" alt="<%= product.name %>" />
+
+              <!-- Category label (bottom-left, from products page) -->
+              <span class="product-category"><%= product.category %></span>
+
+              <!-- Sale badge (top-right) -->
+              <span class="sale-badge">Sale</span>
+            </div>
+
+            <div class="product-info">
+              <h3><%= product.name %></h3>
+              <p><%= product.description %></p>
+
+              <div class="product-meta">
+                <!-- Star rating -->
+                <div class="product-rating">
+                  <% for (var i = 1; i <= 5; i++) { %>
+                    <% if (i <= Math.floor(product.rating)) { %>
+                      <span class="star filled">★</span>
+                    <% } else { %>
+                      <span class="star">★</span>
+                    <% } %>
+                  <% } %>
+                  <span class="rating-num">(<%= product.rating %>)</span>
+                </div>
+
+                <!-- Stock badge -->
+                <span class="stock-badge <%= product.stock <= 5 ? 'low-stock' : 'in-stock' %>">
+                  <%= product.stock <= 5 ? 'Only ' + product.stock + ' left' : 'In Stock' %>
+                </span>
+              </div>
+
+              <div class="product-footer">
+                <!-- Prices: crossed-out original + highlighted sale price -->
+                <div class="price-wrapper">
+                  <span class="original-price">Rs. <%= product.price.toLocaleString() %></span>
+                  <span class="sale-price">Rs. <%= product.salePrice.toLocaleString() %></span>
+                </div>
+                <a href="/contact" class="btn btn-sm">Order Now</a>
+              </div>
+            </div>
+
+          </div><!-- /.product-card -->
+        <% }); %>
+
+      </div><!-- /#product-list -->
+
+    <% } %>
+  </section>
+
+  <!-- ── PAGINATION CONTROLS ─────────────────────────────── -->
+  <!--
+    This section is only meaningful when there are products.
+    jQuery populates the page indicator and controls button state.
+    It is hidden by default and shown by jQuery after initialisation.
+  -->
+  <% if (products.length > 0) { %>
+    <section class="jquery-pagination" id="pagination-controls" style="display:none;">
+      <div class="pagination">
+
+        <!-- PREVIOUS button -->
+        <button id="btn-prev" disabled>&laquo; Previous</button>
+
+        <!-- Dynamic page indicator — jQuery updates this text -->
+        <span id="page-indicator">Page 1 of 1</span>
+
+        <!-- NEXT button -->
+        <button id="btn-next">Next &raquo;</button>
+
+      </div>
+      <p class="pagination-info" id="range-indicator"></p>
+    </section>
+  <% } %>
+
+  <!-- ── FOOTER ──────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>&copy; 2025 Sweet Layers Bakery. All rights reserved.</p>
+  </footer>
+
+  <!-- ── SCRIPTS ─────────────────────────────────────────── -->
+  <!-- 1. Hamburger menu (your existing script) -->
+  <script src="/js/script.js"></script>
+
+  <!--
+    2. jQuery CDN — loaded BEFORE our pagination script.
+       The exam requires jQuery (not vanilla JS).
+  -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!--
+    3. CLIENT-SIDE PAGINATION SCRIPT (jQuery)
+    ────────────────────────────────────────────────────────────
+    HOW IT WORKS (no network requests):
+    ─ All product cards already exist in the DOM (rendered by EJS).
+    ─ We select them all with $('.product-card').
+    ─ We hide all, then use .slice(start, end) to show only 10.
+    ─ currentPage tracks which chunk we're on.
+    ─ Clicking Next / Previous updates currentPage and re-runs
+      the show logic.
+    ─ Buttons are disabled at the boundaries (first / last page).
+  -->
+  <script>
+    $(document).ready(function () {
+
+      // ── CONFIG ────────────────────────────────────────────
+      var ITEMS_PER_PAGE = 10;
+
+      // ── STATE ─────────────────────────────────────────────
+      var currentPage = 1;   // start on page 1
+
+      // ── COLLECT ALL CARDS ─────────────────────────────────
+      // jQuery object containing every rendered .product-card
+      var $cards = $('.product-card');
+      var totalItems = $cards.length;
+
+      // Total pages = ceil(totalItems / ITEMS_PER_PAGE)
+      var totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+      // If there are no cards at all, nothing to do
+      if (totalItems === 0) return;
+
+      // ── SHOW PAGINATION BAR ───────────────────────────────
+      // It was hidden (style="display:none") to avoid a flash of
+      // broken controls before JS runs. Now reveal it.
+      $('#pagination-controls').show();
+
+      // ── CORE FUNCTION: show the correct slice of cards ────
+      function showPage(page) {
+
+        // Calculate which card indices to show
+        // Page 1 → indices 0–9 (slice(0, 10))
+        // Page 2 → indices 10–19 (slice(10, 20)) … etc.
+        var startIndex = (page - 1) * ITEMS_PER_PAGE;  // inclusive
+        var endIndex   = startIndex + ITEMS_PER_PAGE;   // exclusive
+
+        // 1. Hide ALL cards
+        $cards.hide();
+
+        // 2. Show only the slice for this page
+        //    .slice(start, end) returns a jQuery subset — no server call
+        $cards.slice(startIndex, endIndex).show();
+
+        // 3. Update the "Page X of Y" indicator
+        $('#page-indicator').text('Page ' + page + ' of ' + totalPages);
+
+        // 4. Update the range indicator  e.g. "Showing 11–20 of 13 deals"
+        var rangeEnd = Math.min(endIndex, totalItems);
+        $('#range-indicator').text(
+          'Showing ' + (startIndex + 1) + '–' + rangeEnd + ' of ' + totalItems + ' deals'
+        );
+
+        // 5. Disable PREVIOUS on the first page; enable otherwise
+        if (page <= 1) {
+          $('#btn-prev').prop('disabled', true);
+        } else {
+          $('#btn-prev').prop('disabled', false);
+        }
+
+        // 6. Disable NEXT on the last page; enable otherwise
+        if (page >= totalPages) {
+          $('#btn-next').prop('disabled', true);
+        } else {
+          $('#btn-next').prop('disabled', false);
+        }
+      }
+
+      // ── INITIAL RENDER ────────────────────────────────────
+      // Show page 1 as soon as the DOM is ready
+      showPage(currentPage);
+
+      // ── NEXT BUTTON ───────────────────────────────────────
+      $('#btn-next').on('click', function () {
+        if (currentPage < totalPages) {
+          currentPage++;          // increment page counter
+          showPage(currentPage);  // re-render the visible slice
+
+          // Scroll smoothly to the top of the product list
+          // so the user sees the new batch straight away
+          $('html, body').animate(
+            { scrollTop: $('#product-list').offset().top - 80 },
+            300
+          );
+        }
+      });
+
+      // ── PREVIOUS BUTTON ───────────────────────────────────
+      $('#btn-prev').on('click', function () {
+        if (currentPage > 1) {
+          currentPage--;          // decrement page counter
+          showPage(currentPage);  // re-render the visible slice
+
+          $('html, body').animate(
+            { scrollTop: $('#product-list').offset().top - 80 },
+            300
+          );
+        }
+      });
+
+    }); // end $(document).ready
+  </script>
+
+</body>
+</html>

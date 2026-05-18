@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu – Sweet Layers Bakery</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+  <div class="logo">Sweet Layers</div>
+  <button class="hamburger" id="hamburger">&#9776;</button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/menu" class="active">Menu</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/onsale-products">On Sale 🏷️</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <% if (userId) { %>
+      <% if (userRole === "admin") { %>
+        <li><a href="/admin">Admin Panel</a></li>
+      <% } %>
+      <li><a href="/profile"><%= userName %></a></li>
+      <li><a href="/logout">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    <% } %>
+  </ul>
+</nav>
+<!-- FLASH MESSAGES -->
+<% if (messages.error && messages.error.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.error.forEach(msg => { %>
+      <div class="alert alert-error"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+<% if (messages.success && messages.success.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.success.forEach(msg => { %>
+      <div class="alert alert-success"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <h1>Our Menu</h1>
+    <p>Everything is baked fresh to order — no shortcuts, no compromises.</p>
+  </section>
+
+  <!-- MENU GRID - data passed from server.js -->
+  <section class="menu" id="menu">
+    <div class="menu-grid">
+      <% menuItems.forEach(function(item) { %>
+        <div class="card">
+          <img src="<%= item.image %>" alt="<%= item.alt %>" />
+          <h3><%= item.name %></h3>
+          <p><%= item.description %></p>
+          <span><%= item.price %></span>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+
+  <!-- CUSTOM ORDER BANNER -->
+  <section class="cta-banner">
+    <h2>Don't See What You Want?</h2>
+    <p>We take custom orders for any occasion — just let us know!</p>
+    <a href="/contact" class="btn btn-light">Place a Custom Order</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 Sweet Layers Bakery. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>

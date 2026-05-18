@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact – Sweet Layers Bakery</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+  <div class="logo">Sweet Layers</div>
+  <button class="hamburger" id="hamburger">&#9776;</button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/menu">Menu</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/onsale-products">On Sale 🏷️</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact"class="active">Contact</a></li>
+    <% if (userId) { %>
+      <% if (userRole === "admin") { %>
+        <li><a href="/admin">Admin Panel</a></li>
+      <% } %>
+      <li><a href="/profile"><%= userName %></a></li>
+      <li><a href="/logout">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    <% } %>
+  </ul>
+</nav>
+
+<!-- FLASH MESSAGES -->
+<% if (messages.error && messages.error.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.error.forEach(msg => { %>
+      <div class="alert alert-error"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+<% if (messages.success && messages.success.length > 0) { %>
+  <div style="max-width: 600px; margin: 20px auto;">
+    <% messages.success.forEach(msg => { %>
+      <div class="alert alert-success"><%= msg %></div>
+    <% }); %>
+  </div>
+<% } %>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <h1>Contact Us</h1>
+    <p>We'd love to hear from you — orders, questions, or just to say hello!</p>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section class="contact" id="contact">
+    <div class="contact-wrapper">
+
+      <!-- CONTACT INFO -->
+      <div class="contact-info">
+        <h2>Get in Touch</h2>
+        <p>📍 123 Gulberg III, Lahore</p>
+        <p>📞 +92 300 1234567</p>
+        <p>📧 hello@sweetlayers.pk</p>
+        <p>🕐 Mon – Sat, 9am to 8pm</p>
+
+        <div class="info-note">
+          <h3>Custom Orders</h3>
+          <p>For custom cakes, please place your order at least <strong>3 days in advance</strong> so we have time to bake it perfectly for you.</p>
+        </div>
+
+        <div class="info-note">
+          <h3>Delivery</h3>
+          <p>We deliver across Lahore. Same-day delivery is available for orders placed before <strong>12pm</strong>.</p>
+        </div>
+      </div>
+
+      <!-- CONTACT FORM -->
+      <% if (!userId) { %>
+        <div style="background:#fff8f0;border:1px solid #f0d5e0;border-radius:10px;padding:30px;text-align:center;width:340px;">
+          <p style="font-size:1.1rem;color:#5c3317;margin-bottom:16px;">&#128274; Please log in to place an order.</p>
+          <a href="/login" style="display:inline-block;background:#c0586a;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:bold;margin-right:10px;">Login</a>
+          <a href="/register" style="display:inline-block;background:#fff;color:#c0586a;border:2px solid #c0586a;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:bold;">Register</a>
+        </div>
+      <% } else { %>
+      <form class="contact-form">
+        <input type="text" placeholder="Your Name" required />
+        <input type="tel" placeholder="Phone Number" required />
+        <select required>
+          <option value="">Select an Item</option>
+          <option>Classic Strawberry Cake</option>
+          <option>Chocolate Fudge Cake</option>
+          <option>Cupcakes (Box of 12)</option>
+          <option>Red Velvet Cake</option>
+          <option>Lemon Drizzle Cake</option>
+          <option>Custom Birthday Cake</option>
+          <option>Other / Custom Order</option>
+        </select>
+        <textarea placeholder="Any message or special request..."></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+      <% } %>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 Sweet Layers Bakery. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile – Sweet Layers Bakery</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">Sweet Layers</div>
+    <button class="hamburger" id="hamburger">&#9776;</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/menu">Menu</a></li>
+      <li><a href="/products">Products</a></li>
+      <li><a href="/onsale-products">On Sale 🏷️</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <% if (userId) { %>
+        <% if (userRole === "admin") { %>
+          <li><a href="/admin">Admin Panel</a></li>
+        <% } %>
+        <li><a href="/profile" class="active"><%= userName %></a></li>
+        <li><a href="/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      <% } %>
+    </ul>
+  </nav>
+
+ 
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <h1>My Profile</h1>
+    <p>Welcome back!</p>
+  </section>
+
+  <!-- FLASH MESSAGES -->
+  <% if (messages.success && messages.success.length > 0) { %>
+    <div style="max-width: 600px; margin: 20px auto;">
+      <% messages.success.forEach(msg => { %>
+        <div class="alert alert-success"><%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- PROFILE SECTION -->
+  <section class="contact" style="padding: 50px 20px;">
+    <div class="contact-wrapper" style="justify-content: center;">
+      <div style="text-align: center; width: 100%; max-width: 600px;">
+        
+        <div style="background-color: #fff8f0; border: 1px solid #f0d5e0; border-radius: 10px; padding: 30px;">
+          <h2 style="color: #5c3317; margin-bottom: 20px; font-size: 1.6rem;">Welcome, <%= userName %>!</h2>
+          
+          <div style="text-align: left; margin: 20px 0;">
+            <p style="font-size: 1rem; color: #666; margin-bottom: 10px;">
+              <strong style="color: #5c3317;">Name:</strong> <%= userName %>
+            </p>
+          </div>
+
+          <div style="margin-top: 30px;">
+            <a href="/" class="btn" style="background-color: #c0586a; color: #fff; padding: 12px 30px; border-radius: 6px; text-decoration: none; display: inline-block;">
+              Continue Shopping
+            </a>
+            <a href="/logout" class="btn" style="background-color: #f0d5e0; color: #5c3317; padding: 12px 30px; border-radius: 6px; text-decoration: none; display: inline-block; margin-left: 10px;">
+              Logout
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 Sweet Layers Bakery. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>
